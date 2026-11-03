@@ -1,14 +1,26 @@
+const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
+const result = document.getElementById('result');
 
-searchButton.addEventListener('click', async function () {
+async function searchSuperheroes() {
+    const query = searchInput.value.trim();
+    const url = 'superheroes.php?query=' + encodeURIComponent(query);
+
     try {
-        const response = await fetch('superheroes.php');
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error('Request failed');
         }
-        const superheroes = await response.text();
-        alert(superheroes);
+
+        result.innerHTML = await response.text();
     } catch (error) {
-        alert('Unable to load superheroes.');
+        result.textContent = 'Unable to load superheroes.';
+    }
+}
+
+searchButton.addEventListener('click', searchSuperheroes);
+searchInput.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        searchSuperheroes();
     }
 });

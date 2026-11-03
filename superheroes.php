@@ -61,10 +61,45 @@ $superheroes = [
       "biography" => "Notably powerful, Wanda Maximoff has fought both against and with the Avengers, attempting to hone her abilities and do what she believes is right to help the world.",
   ],
 ];
-?>
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
-<?php endforeach; ?>
-</ul>
+header('Content-Type: text/html; charset=UTF-8');
+
+$rawQuery = $_GET['query'] ?? '';
+$query = is_string($rawQuery) ? trim($rawQuery) : '';
+
+if ($query === '') {
+    echo '<ul>';
+    foreach ($superheroes as $superhero) {
+        echo '<li>' . htmlspecialchars($superhero['alias'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</li>';
+    }
+    echo '</ul>';
+    exit;
+}
+
+$match = null;
+
+foreach ($superheroes as $superhero) {
+    if (strcasecmp($query, $superhero['name']) === 0 ||
+        strcasecmp($query, $superhero['alias']) === 0) {
+        $match = $superhero;
+        break;
+    }
+}
+
+if ($match === null) {
+    foreach ($superheroes as $superhero) {
+        if (stripos($superhero['name'], $query) !== false ||
+            stripos($superhero['alias'], $query) !== false) {
+            $match = $superhero;
+            break;
+        }
+    }
+}
+
+if ($match === null) {
+    echo '<p>Superhero not found</p>';
+} else {
+    echo '<h3>' . htmlspecialchars($match['alias'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</h3>';
+    echo '<h4>' . htmlspecialchars($match['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</h4>';
+    echo '<p>' . htmlspecialchars($match['biography'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
+}

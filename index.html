@@ -14,8 +14,17 @@
 
     <main>
         <h2>Find a Superhero</h2>
-        <p>Click the button to view the superheroes.</p>
-        <button id="search-button" type="button">Search</button>
+        <p>Enter a superhero's name or alias, or leave the field blank to see the full list.</p>
+
+        <div class="search-area">
+            <label for="search-input">Superhero name or alias</label>
+            <div class="search-controls">
+                <input type="text" id="search-input" placeholder="e.g. Ironman or Tony Stark" autocomplete="off">
+                <button type="button" id="search-button">Search</button>
+            </div>
+        </div>
+
+        <div id="result" aria-live="polite"></div>
     </main>
 </body>
 </html>
